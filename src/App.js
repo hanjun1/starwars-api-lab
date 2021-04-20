@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { getAllStarships } from "./services/sw-api";
+import React from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import ShipPage from "./pages/ShipPage/ShipPage";
+import MainPage from "./pages/MainPage/MainPage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    allStarships: null,
+  };
+
+  async componentDidMount() {
+    let allStarships = await getAllStarships();
+    this.setState({ allStarships });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Switch>
+          <Route path="/starship" render={(props) => <ShipPage {...props} />} />
+          <Route
+            path="/"
+            render={(props) => (
+              <MainPage {...props} allStarships={this.state.allStarships} />
+            )}
+          />
+          <Redirect to="/" />
+        </Switch>
+      </div>
+    );
+  }
 }
 
 export default App;
