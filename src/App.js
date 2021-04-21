@@ -4,18 +4,23 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import ShipPage from "./pages/ShipPage/ShipPage";
 import MainPage from "./pages/MainPage/MainPage";
+import LoadingPage from "./pages/LoadingPage/LoadingPage";
 
 class App extends React.Component {
   state = {
     allStarships: null,
+    loaded: false,
   };
 
   async componentDidMount() {
     let allStarships = await getAllStarships();
-    this.setState({ allStarships });
+    this.setState({ allStarships, loaded: true });
   }
 
   render() {
+    if (!this.state.loaded) {
+      return <LoadingPage />;
+    }
     return (
       <div className="App">
         <Switch>
